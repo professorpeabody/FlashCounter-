@@ -1,91 +1,110 @@
-﻿var score: Number = 876;
-var newScore: Number = 1077;
-var scoreDif: Number = 1077 - 876;
-var str: String;
-var c1: String;
-var c2: String;
-var c3: String;
-var c4: String;
-var c5: String;
-var cc1: MovieClip;
-var cc2: MovieClip;
-var cc3: MovieClip;
-var cc4: MovieClip;
-var cc5: MovieClip;
-var lngth: Number;
-var strPos: Array = [];
-var moviePos: Array = [];
-var temp: String;
-var mySound: Sound = new Sound();
-var myChannel: SoundChannel = new SoundChannel();
-mySound.load(new URLRequest("burp.mp3"));
-var theNum: Number;
+import flash.display.Loader;
+import flash.display.MovieClip;
+import flash.utils.Timer;
+import flash.display.Sprite;
+import flash.events.TimerEvent;
 
+var indx, addColx, indy, lngth: Number;
+var score: Number = 1;
+var newScore: Number = 11000;
+var scoreDif: Number = newScore - score; scoreDif = scoreDif / 44; // count increment
+var container: Sprite = new Sprite();
+var closeContainerButton: closeButton = new closeButton();
+var str, temp: String;
+var c1,c2,c3,c4,c5: String;
+var cc1, cc2, cc3, cc4, cc5: MovieClip;
+var stringArrayofNumerals: Array = [];
 var changeNumberTimer: Timer = new Timer(25, scoreDif);
-changeNumberTimer.addEventListener(TimerEvent.TIMER, goAgain);
+closeContainerButton.addEventListener(MouseEvent.CLICK, removeContainer);
+closeContainerButton.x = stage.stageWidth / 2 - closeContainerButton.width / 2;
+closeContainerButton.y = stage.stageHeight / 2 - closeContainerButton.height / 2;
+addChild(container);
+addChild(closeContainerButton);
+changeNumberTimer.addEventListener(TimerEvent.TIMER, count);
 changeNumberTimer.start();
 
-function goAgain(eft: TimerEvent): void {
-	theNum = score;
-	if (theNum%2 == 0) {
-		myChannel = mySound.play();
+function removeContainer(tevt: MouseEvent): void {
+
+	closeContainerButton.removeEventListener(MouseEvent.CLICK, removeContainer);
+
+	if (closeContainerButton.stage) {
+		closeContainerButton.parent.removeChild(closeContainerButton);
 	}
-	score = score + 1;
+	if (container.stage) {
+		container.parent.removeChild(container);
+	}
+}
+
+function count(eft: TimerEvent): void {
+
+	score = score + 44;
 	breakDownScore();
 }
 
 function breakDownScore(): void {
 
-	strPos.splice(0);
+	stringArrayofNumerals.splice(0);
 	str = score.toString();
 	lngth = str.length;
 
 	for (var n: Number = 0; n < lngth; n++) {
 		temp = str.substring(n, n + 1);
-		strPos.push(temp);
+		stringArrayofNumerals.push(temp);
 	}
-	calcZeros();
+	convertTextNumeralsToGraphicNumerals();
 }
 
-function calcZeros(): void {
+function convertTextNumeralsToGraphicNumerals(): void {
 
 	if (lngth == 1) {
-		c5 = strPos[0];
-		cc5 = showGraphicsNumber(c5);
+		c5 = stringArrayofNumerals[0];
+		cc5 = getGraphicForNumeral(c5);
 		cc4 = new numGraphic0();
 		cc3 = new numGraphic0();
 		cc2 = new numGraphic0();
 		cc1 = new numGraphic0();
 	}
 	if (lngth == 2) {
-		c5 = strPos[1];
-		c4 = strPos[0];
-		cc5 = showGraphicsNumber(c5);
-		cc4 = showGraphicsNumber(c4);
+		c5 = stringArrayofNumerals[1];
+		c4 = stringArrayofNumerals[0];
+		cc5 = getGraphicForNumeral(c5);
+		cc4 = getGraphicForNumeral(c4);
 		cc3 = new numGraphic0();
 		cc2 = new numGraphic0();
 		cc1 = new numGraphic0();
 	}
 	if (lngth == 3) {
-		c5 = strPos[2];
-		c4 = strPos[1];
-		c3 = strPos[0];
-		cc5 = showGraphicsNumber(c5);
-		cc4 = showGraphicsNumber(c4);
-		cc3 = showGraphicsNumber(c3);
+		c5 = stringArrayofNumerals[2];
+		c4 = stringArrayofNumerals[1];
+		c3 = stringArrayofNumerals[0];
+		cc5 = getGraphicForNumeral(c5);
+		cc4 = getGraphicForNumeral(c4);
+		cc3 = getGraphicForNumeral(c3);
 		cc2 = new numGraphic0();
 		cc1 = new numGraphic0();
 	}
 	if (lngth == 4) {
-		c5 = strPos[3];
-		c4 = strPos[2];
-		c3 = strPos[1];
-		c2 = strPos[0];
-		cc5 = showGraphicsNumber(c5);
-		cc4 = showGraphicsNumber(c4);
-		cc3 = showGraphicsNumber(c3);
-		cc2 = showGraphicsNumber(c2);
+		c5 = stringArrayofNumerals[3];
+		c4 = stringArrayofNumerals[2];
+		c3 = stringArrayofNumerals[1];
+		c2 = stringArrayofNumerals[0];
+		cc5 = getGraphicForNumeral(c5);
+		cc4 = getGraphicForNumeral(c4);
+		cc3 = getGraphicForNumeral(c3);
+		cc2 = getGraphicForNumeral(c2);
 		cc1 = new numGraphic0();
+	}	
+	if (lngth == 5) {
+		c5 = stringArrayofNumerals[4];
+		c4 = stringArrayofNumerals[3];
+		c3 = stringArrayofNumerals[2];
+		c2 = stringArrayofNumerals[1];
+		c1 = stringArrayofNumerals[0];
+		cc5 = getGraphicForNumeral(c5);
+		cc4 = getGraphicForNumeral(c4);
+		cc3 = getGraphicForNumeral(c3);
+		cc2 = getGraphicForNumeral(c2);
+		cc1 = getGraphicForNumeral(c1);
 	}
 	cc1.width = 60;
 	cc1.height = 75;
@@ -97,8 +116,10 @@ function calcZeros(): void {
 	cc4.height = 75;
 	cc5.width = 60;
 	cc5.height = 75;
+
 	indx = stage.stageWidth / 2 - 180;
-	indy = 500;
+
+	indy = 100;
 	cc1.x = indx;
 	cc1.y = indy;
 	cc2.x = indx + 60;
@@ -132,7 +153,7 @@ function calcZeros(): void {
 	container.addChild(cc5);
 }
 
-function showGraphicsNumber(uu: String): MovieClip {
+function getGraphicForNumeral(uu: String): MovieClip {
 
 	if (uu == "0") {
 		return new numGraphic0();
@@ -163,8 +184,9 @@ function showGraphicsNumber(uu: String): MovieClip {
 	}
 	if (uu == "9") {
 		return new numGraphic9();
-	} 
-	else {
-		return new numGraphic9();
+	}
+	else
+	{
+		return new numGraphic0();
 	}
 }
